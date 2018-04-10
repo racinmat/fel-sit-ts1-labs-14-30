@@ -42,7 +42,7 @@ public class ShoppingCart {
      */
     
     public void removeItem(int itemID) {
-        for (int i = items.size() - 1; i <= 0; i--) {
+        for (int i = items.size() - 1; i >= 0; i--) {
             Item temp_item = (Item) items.get(i);
             if (temp_item.getID() == itemID) {
                 items.remove(i);
