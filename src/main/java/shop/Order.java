@@ -1,5 +1,6 @@
 package shop;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -14,12 +15,14 @@ public class Order {
     String customerAddress;
     int state;
     OrderState myState;
+    LocalDateTime created;
 
     public Order(ShoppingCart cart, String customerName, String customerAddress, int state) {
         items = cart.getCartItems();
         this.customerName = customerName;
         this.customerAddress = customerAddress;
         this.state = state;
+        this.created = DateTimeFactory.getNow();
     }
 
     public Order(ShoppingCart cart, String customerName, String customerAddress) {
@@ -28,8 +31,8 @@ public class Order {
         this.customerAddress = customerAddress;
         this.state = 0;
         this.myState = OrderState.CREATED;
+        this.created = DateTimeFactory.getNow();
     }
-    
     
     public ArrayList<Item> getItems() {
         return items;
@@ -63,5 +66,9 @@ public class Order {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
     }
 }
