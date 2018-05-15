@@ -1,9 +1,9 @@
 package selenium;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import helpers.LoginPage;
+import helpers.TopMenuLoggedIn;
+import helpers.TopMenuPublic;
+import org.junit.*;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -22,9 +22,12 @@ import static org.junit.Assert.*;
 public class RedmineTest {
 
     static WebDriver driver;
+    private LoginPage loginPage;
+    private TopMenuPublic topMenuPublic;
+    private TopMenuLoggedIn topMenuLoggedIn;
 
     @BeforeClass
-    public static void setUp() throws Exception {
+    public static void setUpClass() throws Exception {
         System.setProperty("webdriver.chrome.driver",
             "C:\\Users\\Azathoth\\IdeaProjects\\unittests1430\\src\\test\\resources\\chromedriver.exe");
         System.setProperty("webdriver.gecko.driver",
@@ -33,57 +36,58 @@ public class RedmineTest {
 //        chromeDriver = new FirefoxDriver();
     }
 
+    @Before
+    public void setUp() throws Exception {
+        loginPage = LoginPage.create(driver);
+        topMenuPublic = TopMenuPublic.create(driver);
+        topMenuLoggedIn = TopMenuLoggedIn.create(driver);
+    }
+
     @Test
     public void loginProcedure() throws InterruptedException {
         a_testLogin();
         b_testShowProfile();
+        c_createProject();
     }
 
-//    @Test
+    //    @Test
     public void a_testLogin() throws InterruptedException {
         driver.get("http://demo.redmine.org/");
         assertEquals("http://demo.redmine.org/", driver.getCurrentUrl());
-//        assertFalse(chromeDriver.findElement(By.id("loggedas")).isDisplayed());
-        List<WebElement> elements = driver.findElement(By.id("top-menu"))
-            .findElements(By.tagName("div"));
-        for (WebElement element : elements) {
-            assertNotEquals("loggedas", element.getAttribute("id"));
-        }
 
-        driver
-            .findElement(By.cssSelector("a.login"))
-            .click();
+        topMenuPublic.loginButton.click();
 
         assertEquals("http://demo.redmine.org/login", driver.getCurrentUrl());
 
-        WebElement username = driver.findElement(By.id("username"));
-        WebElement password = driver.findElement(By.id("password"));
-        username.sendKeys("testUser654321");
-        password.sendKeys("heslo");
-
-        WebElement loginButton = driver.findElement(By.xpath("//*[@name=\"login\"]"));
-        loginButton.click();
+        loginPage.login("testUser222", "heslo");
 
         assertEquals("http://demo.redmine.org/", driver.getCurrentUrl());
-//        assertEquals("Přihlášen jako testUser654321", chromeDriver.findElement(By.id("loggedas")).getText());
-//        if (chromeDriver.findElement(By.id("top-menu"))
-//            .findElements(By.tagName("div"))
-//            .stream()
-//            .noneMatch((e) -> e.getAttribute("id").equals("loggedas"))) {
-//            fail();
-//        }
 
-        assertTrue(driver.findElement(By.id("loggedas")).isDisplayed());
+        assertTrue(topMenuLoggedIn.user.isDisplayed());
 
         Thread.sleep(1000);
     }
 
-//    @Test
+    //    @Test
     public void b_testShowProfile() {
         WebElement profileButton = driver.findElement(By.cssSelector("#loggedas > .user"));
         profileButton.click();
 
-        assertEquals("http://demo.redmine.org/users/338647", driver.getCurrentUrl());
+        assertEquals("http://demo.redmine.org/users/340939", driver.getCurrentUrl());
+    }
+
+    public void c_createProject() {
+        driver.get("http://demo.redmine.org/projects");
+        driver.findElement(By.cssSelector("#content > div.contextual > a.icon.icon-add"))
+            .click();
+
+        assertEquals("http://demo.redmine.org/projects/new", driver.getCurrentUrl());
+        driver.findElement(By.id("project_name")).sendKeys("my new project");
+        driver.findElement(By.id("project_identifier")).sendKeys("my_new_project");
+        driver.findElement(By.name("commit")).click();
+
+        WebElement selectBox = driver.findElement(By.id("project_quick_jump_box"));
+        selectBox.findElements(By.xpath("//*[@id=\"project_quick_jump_box\"]/option[text()=\"my new project\"]"));
     }
 
     @AfterClass
