@@ -10,7 +10,9 @@ import java.util.ArrayList;
 
 public class ShoppingCart {
 
-    
+    public static final int POINTS_PER_DISCOUNT = 15;
+    public static final int DISCOUNT = 100;
+
     ArrayList<Item> items;
 
     public ShoppingCart(ArrayList<Item> items) {
@@ -61,21 +63,27 @@ public class ShoppingCart {
      * 
      * @return total price with discount
      */
-    public int getTotalPrice() {
-        int total = 0;
-//        for (int i = items.size() - 1; i >= 0; i--) {
-//            Item temp_item = (Item) items.get(i);
-//            total += temp_item.getPrice();
-//        }
-//        for(Item i: items) {
-//            total += i.getPrice();
-//        }
-//        return total;
+    public int getTotalPrice(Customer customer) {
+//        return Math.max(getOriginalPrice() - getDiscount(customer), 0); // totally unreadable :(
+        int originalPrice = getOriginalPrice();
+        int discount = getDiscount(customer);
+        if (originalPrice < discount) {
+            return 0;
+        }
+
+        return originalPrice - discount;
+    }
+
+    public int getDiscount(Customer customer) {
+        if (customer.getLoyaltyPoints() >= POINTS_PER_DISCOUNT) {
+            return DISCOUNT;
+        }
+        return 0;
+    }
+
+    public int getOriginalPrice() {
         return (int) items.stream().mapToDouble(Item::getPrice).sum();
     }
-    
-    
-    
     
     
     

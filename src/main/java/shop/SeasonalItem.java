@@ -42,6 +42,11 @@ public class SeasonalItem extends Item {
     }
 
     @Override
+    public int getLoyaltyPoints() {
+        return 0;
+    }
+
+    @Override
     public int hashCode() {
 
         return Objects.hash(availableFrom, getAvailableTo);

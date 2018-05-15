@@ -13,27 +13,29 @@ public class Order {
     private ArrayList<Item> items;
     String customerName;
     String customerAddress;
-    int state;
-    OrderState myState;
+    OrderState state;
     LocalDateTime created;
+    ShoppingCart cart;
 
-    public Order(ShoppingCart cart, String customerName, String customerAddress, int state) {
+
+    public Order(ShoppingCart cart, String customerName, String customerAddress, OrderState state) {
         items = cart.getCartItems();
         this.customerName = customerName;
         this.customerAddress = customerAddress;
         this.state = state;
         this.created = DateTimeFactory.getNow();
+        this.cart = cart;
     }
 
     public Order(ShoppingCart cart, String customerName, String customerAddress) {
         items = cart.getCartItems();
         this.customerName = customerName;
         this.customerAddress = customerAddress;
-        this.state = 0;
-        this.myState = OrderState.CREATED;
+        this.state = OrderState.CREATED;
         this.created = DateTimeFactory.getNow();
+        this.cart = cart;
     }
-    
+
     public ArrayList<Item> getItems() {
         return items;
     }
@@ -60,15 +62,23 @@ public class Order {
     }
     
     
-    public int getState() {
+    public OrderState getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(OrderState state) {
         this.state = state;
     }
 
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public void processOrder(Customer customer) {
+        if (cart.getDiscount(customer) != 0) {
+            customer.subtractPoints();
+        }
+        customer.addOrder(this);
+
     }
 }

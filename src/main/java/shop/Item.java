@@ -72,5 +72,7 @@ public abstract class Item {
         }
         return false;
     }
+
+    public abstract int getLoyaltyPoints();
 }
 

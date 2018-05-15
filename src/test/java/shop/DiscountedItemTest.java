@@ -64,4 +64,8 @@ public class DiscountedItemTest {
 //        assertNotEquals(item1, item2);
     }
 
+    @Test
+    public void getLoyaltyPoints() {
+        assertEquals(0, item.getLoyaltyPoints());
+    }
 }

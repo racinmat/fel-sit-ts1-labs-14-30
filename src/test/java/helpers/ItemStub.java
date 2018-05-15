@@ -7,6 +7,11 @@ public class ItemStub extends Item {
         super(id, name, price, category);
     }
 
+    @Override
+    public int getLoyaltyPoints() {
+        return 0;
+    }
+
     public ItemStub() {
         super(0, "stubName", 10, "stubCategory");
     }

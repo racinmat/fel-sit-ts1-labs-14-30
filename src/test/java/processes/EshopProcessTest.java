@@ -1,10 +1,7 @@
 package processes;
 
 import org.junit.Test;
-import shop.Item;
-import shop.Order;
-import shop.ShoppingCart;
-import shop.StandardItem;
+import shop.*;
 import storage.NoItemInStorage;
 import storage.Storage;
 
@@ -34,7 +31,7 @@ public class EshopProcessTest {
         cart.addItem(item);
 //        assert
         assertEquals(1, cart.getItemsCount());
-        assertEquals(ITEM_0_PRICE, cart.getTotalPrice());
+        assertEquals(ITEM_0_PRICE, cart.getTotalPrice(new Customer("anonymous", "4chan")));
         assertEquals(item, cart.getCartItems().get(0));
 //        act
         Order order = new Order(cart, "První zákazník", "Příčná Ulice");
